@@ -1,10 +1,11 @@
-// --- src/app/views/VipDashboard.js ---
+// --- src/app/views/VipDashboard.js (v1.1 - LINT FIX) ---
 'use client';
 
 import React, { useState, useEffect } from 'react';
 import { ref, onValue } from 'firebase/database';
 import { database } from '../lib/firebase';
 import { FaLock, FaPlayCircle } from 'react-icons/fa';
+import Link from 'next/link';
 import './VipDashboard.css';
 
 const VipDashboard = ({ user }) => {
@@ -45,19 +46,19 @@ const VipDashboard = ({ user }) => {
             <p>Your journey to becoming a top affiliate starts here. Select an unlocked lesson to begin.</p>
             <div className="modules-list">
                 {sortedModules.map(moduleId => {
-                    const module = courseContent[moduleId];
-                    const sortedLessons = module.lessons ? Object.keys(module.lessons).sort((a,b) => module.lessons[a].order - module.lessons[b].order) : [];
+                    const moduleData = courseContent[moduleId]; // <-- THE CORRECT VARIABLE NAME
+                    const sortedLessons = moduleData.lessons ? Object.keys(moduleData.lessons).sort((a,b) => moduleData.lessons[a].order - moduleData.lessons[b].order) : [];
                     
                     return (
                         <div key={moduleId} className="module-card">
-                            <h3>{module.title}</h3>
+                            <h3>{moduleData.title}</h3>
                             <div className="lessons-list">
                                 {sortedLessons.map(lessonId => {
-                                    const lesson = module.lessons[lessonId];
+                                    const lesson = moduleData.lessons[lessonId];
                                     const isUnlocked = userProgress.unlockedLessons.includes(lessonId);
 
                                     return (
-                                        <a 
+                                        <Link 
                                             key={lessonId} 
                                             href={isUnlocked ? `/lesson/${lessonId}` : '#'} 
                                             className={`lesson-item ${isUnlocked ? 'unlocked' : 'locked'}`}
@@ -70,7 +71,7 @@ const VipDashboard = ({ user }) => {
                                                 <h4>{lesson.title}</h4>
                                                 <p>{lesson.description}</p>
                                             </div>
-                                        </a>
+                                        </Link>
                                     );
                                 })}
                             </div>
