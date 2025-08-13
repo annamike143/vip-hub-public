@@ -1,0 +1,95 @@
+/* --- src/app/lesson/[lessonId]/lesson-page.css (v2.0 - FINAL POLISHED VERSION) --- */
+.lesson-page-wrapper {
+    background-color: var(--surface-color);
+    min-height: 100vh;
+}
+
+.lesson-header {
+    padding: 1rem 0;
+    background-color: var(--surface-color);
+    border-bottom: 1px solid var(--border-color);
+}
+.back-to-dash {
+    color: var(--text-primary);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s;
+}
+.back-to-dash:hover {
+    color: var(--primary-red);
+}
+
+.lesson-container {
+    padding: 4rem 0; /* More vertical space */
+}
+
+/* Using the global .container class for alignment */
+.lesson-content {
+    max-width: 800px; /* Optimal reading width */
+    margin: auto;
+    padding: 0 1.5rem;
+}
+
+.lesson-content h1 {
+    font-size: 2.8rem;
+    margin-bottom: 0.5rem;
+}
+.lesson-content .lesson-description {
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+    margin-bottom: 3rem;
+}
+
+.thumbnail-link { display: block; position: relative; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border: 1px solid var(--border-color); }
+.play-icon-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; opacity: 1; transition: opacity 0.3s, background-color 0.3s; }
+.thumbnail-link:hover .play-icon-overlay { background-color: rgba(204, 0, 0, 0.7); }
+.play-icon-overlay svg { transition: transform 0.3s; }
+.thumbnail-link:hover .play-icon-overlay svg { transform: scale(1.1); }
+
+.unlock-gate, .mentorship-qa { margin-top: 4rem; padding-top: 3rem; border-top: 1px solid var(--border-color); }
+.unlock-gate h3, .mentorship-qa h3 { font-size: 1.8rem; margin-bottom: 0.5rem; }
+.unlock-gate > p, .mentorship-qa > p { color: var(--text-secondary); margin-bottom: 1.5rem; }
+
+.unlock-gate form { display: flex; flex-direction: column; gap: 1rem; }
+@media (min-width: 768px) { .unlock-gate form { flex-direction: row; } }
+
+.unlock-gate input { flex-grow: 1; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; font-size: 1rem; }
+.unlock-gate button { background-color: var(--primary-red); color: white; border: none; padding: 0.75rem 2rem; border-radius: 8px; cursor: pointer; }
+.unlock-gate button:disabled { opacity: 0.7; }
+
+.status-message { margin-top: 1rem; font-weight: 500; }
+.status-message.success { color: #28a745; }
+.status-message.error { color: var(--primary-red); }
+
+.messages-display { background-color: var(--background-color); border: 1px solid var(--border-color); border-radius: 8px; padding: 1rem; height: 300px; overflow-y: auto; display: flex; flex-direction: column-reverse; gap: 1rem; }
+.message-form { margin-top: 1rem; display: flex; gap: 1rem; }
+.message-form input { flex-grow: 1; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; }
+.message-form button { background-color: var(--primary-red); color: white; border: none; padding: 0 2rem; border-radius: 8px; cursor: pointer; }
+
+.message-bubble { padding: 0.75rem 1.25rem; border-radius: 18px; max-width: 70%; width: fit-content; }
+.message-bubble.user { background-color: #e9e9eb; color: black; border-bottom-left-radius: 4px; align-self: flex-start; }
+.message-bubble.admin { background-color: var(--primary-red); color: white; border-bottom-right-radius: 4px; align-self: flex-end; }
+/* --- New AI Mentor Styles --- */
+.ai-mentor-section {
+    margin-top: 4rem;
+    padding-top: 3rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.ai-mentor-section h3 {
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+}
+
+.ai-mentor-section > p {
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+}
+
+.chatbot-container {
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 1rem; /* Optional padding */
+    background-color: var(--background-color);
+    min-height: 400px; /* Give it some default space */
+}
