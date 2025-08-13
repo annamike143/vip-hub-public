@@ -1,4 +1,4 @@
-// --- src/app/views/VipDashboard.js (v1.1 - LINT FIX) ---
+// --- src/app/views/VipDashboard.js (v1.2 - DEFINITIVE LINT FIX) ---
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -46,7 +46,7 @@ const VipDashboard = ({ user }) => {
             <p>Your journey to becoming a top affiliate starts here. Select an unlocked lesson to begin.</p>
             <div className="modules-list">
                 {sortedModules.map(moduleId => {
-                    const moduleData = courseContent[moduleId]; // <-- THE CORRECT VARIABLE NAME
+                    const moduleData = courseContent[moduleId]; // <-- THE CORRECTED VARIABLE NAME
                     const sortedLessons = moduleData.lessons ? Object.keys(moduleData.lessons).sort((a,b) => moduleData.lessons[a].order - moduleData.lessons[b].order) : [];
                     
                     return (
@@ -60,9 +60,8 @@ const VipDashboard = ({ user }) => {
                                     return (
                                         <Link 
                                             key={lessonId} 
-                                            href={isUnlocked ? `/lesson/${lessonId}` : '#'} 
+                                            href={isUnlocked ? `/lesson/${lessonId}` : '#'}
                                             className={`lesson-item ${isUnlocked ? 'unlocked' : 'locked'}`}
-                                            onClick={(e) => !isUnlocked && e.preventDefault()}
                                         >
                                             <div className="lesson-icon">
                                                 {isUnlocked ? <FaPlayCircle /> : <FaLock />}
