@@ -1,16 +1,15 @@
-// --- src/app/page.js (v2.0 - With VIP Dashboard) ---
+// --- src/app/page.js (THE CORRECT HOMEPAGE CODE) ---
 'use client';
 
 import React, { useState, useEffect } from 'react';
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from './lib/firebase';
 import Login from './components/Login';
-import VipDashboard from './views/VipDashboard'; // Our new dashboard
+import VipDashboard from './views/VipDashboard';
 
 import './components/Login.css';
-import './views/VipDashboard.css'; // The new styles
+import './views/VipDashboard.css';
 
-// This is the main application shell
 const AppShell = ({ user }) => {
     const handleSignOut = () => { signOut(auth); };
 

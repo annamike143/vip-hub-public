@@ -93,3 +93,11 @@
     background-color: var(--background-color);
     min-height: 400px; /* Give it some default space */
 }
+.chatbot-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 400px;
+    color: var(--text-secondary);
+    font-style: italic;
+}
