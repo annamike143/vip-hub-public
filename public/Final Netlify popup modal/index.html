@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chatbot Sandbox</title>
+    <style>body { margin: 0; padding: 0; overflow: hidden; }</style>
+</head>
+<body>
+    <div id="chat_form"></div>
+
+    <script>
+        // This code will run inside the clean, simple iframe environment
+        try {
+            // 1. Get the URL parameters passed from our main app
+            const params = new URLSearchParams(window.location.search);
+            const botId = params.get('botId');
+
+            // 2. If we have a bot ID, we dynamically create and inject the script
+            if (botId) {
+                const script = document.createElement('script');
+                script.src = 'https://app.simplebotinstall.com/js/chat_form_plugin.js'; // THE CORRECT URL
+                script.setAttribute('data-bot-id', botId);
+                
+                // We append it to the required div
+                document.getElementById('chat_form').appendChild(script);
+            } else {
+                document.body.innerHTML = 'Error: Bot ID not provided.';
+            }
+        } catch (e) {
+            document.body.innerHTML = 'An error occurred while loading the chatbot.';
+            console.error(e);
+        }
+    </script>
+</body>
+</html>

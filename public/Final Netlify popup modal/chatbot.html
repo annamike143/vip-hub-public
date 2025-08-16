@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" style="height: 100%;">
+<head>
+    <meta charset="UTF-8">
+    <title>Chatbot Sandbox</title>
+    <style>body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; }</style>
+</head>
+<body>
+    <div id="chat_form" style="height: 100%;"></div>
+    <script>
+        try {
+            const params = new URLSearchParams(window.location.search);
+            const botId = params.get('botId');
+            if (botId) {
+                const script = document.createElement('script');
+                script.src = 'https://app.simplebotinstall.com/js/chat_form_plugin.js';
+                script.setAttribute('data-bot-id', botId);
+                document.getElementById('chat_form').appendChild(script);
+            }
+        } catch (e) {
+            console.error('Chatbot loader failed:', e);
+        }
+    </script>
+</body>
+</html>

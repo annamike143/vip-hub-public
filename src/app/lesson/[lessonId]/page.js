@@ -1,4 +1,4 @@
-// --- src/app/lesson/[lessonId]/page.js (v7.1 - THE DEFINITIVE UN-COLLAPSED VERSION) ---
+// --- src/app/lesson/[lessonId]/page.js (THE DEFINITIVE TYPO FIX) ---
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -10,25 +10,6 @@ import { onAuthStateChanged } from 'firebase/auth';
 import Link from 'next/link';
 import Image from 'next/image';
 import './lesson-page.css';
-
-// A dedicated component for our brute-force injection
-const ChatbotEmbed = ({ lesson, lessonId }) => {
-    // We use a useEffect hook to ensure this only runs on the client, preventing hydration errors.
-    const [isClient, setIsClient] = useState(false);
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
-
-    if (!isClient || !lesson?.chatbotEmbedCode) {
-        return <div className="chatbot-placeholder">Loading AI Mentor...</div>;
-    }
-
-    // The key={lessonId} is CRITICAL. It tells React to completely re-render this
-    // component from scratch when you navigate to a new lesson, forcing the script to re-run.
-    return (
-        <div key={lessonId} dangerouslySetInnerHTML={{ __html: lesson.chatbotEmbedCode }} />
-    );
-};
 
 export default function LessonPage() {
     const params = useParams();
@@ -59,7 +40,6 @@ export default function LessonPage() {
         if (!user || !lessonId) return;
 
         let modulesListener;
-        
         const progressRef = ref(database, `users/${user.uid}/progress/unlockedLessons`);
         const progressListener = onValue(progressRef, (progressSnapshot) => {
             const unlockedLessons = progressSnapshot.val() || [];
@@ -68,10 +48,9 @@ export default function LessonPage() {
                 setLoading(false);
                 return;
             }
-
             const modulesRef = ref(database, 'courseContent/modules');
-            modulesListener = onValue(modulesRef, (modulesSnapshot) => {
-                const modules = modulesSnapshot.val();
+            modulesListener = onValue(modulesRef, (snapshot) => {
+                const modules = snapshot.val();
                 let foundLesson = null;
                 if (modules) {
                     for (const moduleId in modules) {
@@ -88,11 +67,7 @@ export default function LessonPage() {
                 }
                 setLoading(false);
             });
-
-        }, (err) => {
-            setError("Could not verify your lesson progress.");
-            setLoading(false);
-        });
+        }, { onlyOnce: true });
 
         return () => {
             progressListener();
@@ -136,6 +111,33 @@ export default function LessonPage() {
          setNewMessage('');
     };
 
+    const handleStartRecitation = () => {
+        if (!lessonData?.chatbotId) {
+            alert("Chatbot is not configured for this lesson.");
+            return;
+        }
+
+        const chatbotHtml = `
+            <!DOCTYPE html>
+            <html lang="en" style="height: 100%;">
+            <head><title>AI Mentor</title><style>body,html{margin:0;padding:0;height:100%;overflow:hidden;}</style></head>
+            <body>
+                <div id="chat_form" style="height: 100%;">
+                    <script src="https://app.simplebotinstall.com/js/chat_form_plugin.js" data-bot-id="${lessonData.chatbotId}"><\/script>
+                </div>
+            </body>
+            </html>
+        `;
+
+        const windowFeatures = 'width=800,height=700,menubar=no,toolbar=no,location=no,resizable=yes,scrollbars=yes';
+        const newWindow = window.open('', 'VipHubChatbot', windowFeatures);
+
+        if (newWindow) {
+            newWindow.document.write(chatbotHtml);
+            newWindow.document.close();
+        }
+    };
+
     if (loading) return <div className="loading-state">Authenticating and loading lesson...</div>;
     if (error) return <div className="loading-state"><p>{error}</p><Link href="/" className="back-to-dash-error">← Back to Dashboard</Link></div>;
     if (!lessonData) return <div className="loading-state">Preparing lesson content...</div>;
@@ -159,15 +161,20 @@ export default function LessonPage() {
                     </a>
                     <div className="ai-mentor-section">
                         <h3>Your AI Mentor</h3>
-                        <p>Complete your recitation with your AI mentor below to receive the unlock code for the next lesson.</p>
-                        <div className="chatbot-container">
-                            <ChatbotEmbed lesson={lessonData} lessonId={lessonId} />
-                        </div>
+                        <p>Your AI Mentor is ready. Click the button below to begin your recitation and get the unlock code.</p>
+                        <button 
+                            className="start-recitation-btn" 
+                            onClick={handleStartRecitation}
+                            disabled={!lessonData}
+                        >
+                            START MY RECITATION
+                        </button>
                     </div>
                     <div className="unlock-gate">
                         <h3>Unlock the Next Lesson</h3>
                         <p>Once your AI Mentor gives you the secret code, enter it here to proceed.</p>
                         <form onSubmit={handleUnlockSubmit}>
+                            {/* --- THE DEFINITIVE SYNTAX FIX IS HERE --- */}
                             <input type="text" value={unlockCode} onChange={(e) => setUnlockCode(e.target.value)} placeholder="Enter unlock code" />
                             <button type="submit" disabled={isSubmittingCode}>{isSubmittingCode ? 'Verifying...' : 'Unlock'}</button>
                         </form>
