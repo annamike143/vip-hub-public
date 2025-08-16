@@ -1,4 +1,4 @@
-// --- src/app/lesson/[lessonId]/page.js (THE DEFINITIVE TYPO FIX) ---
+// --- src/app/lesson/[lessonId]/page.js (THE DEFINITIVE ADAPTIVE WINDOW VERSION) ---
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -39,18 +39,23 @@ export default function LessonPage() {
     useEffect(() => {
         if (!user || !lessonId) return;
 
+        let isMounted = true;
         let modulesListener;
         const progressRef = ref(database, `users/${user.uid}/progress/unlockedLessons`);
-        const progressListener = onValue(progressRef, (progressSnapshot) => {
+        
+        onValue(progressRef, (progressSnapshot) => {
+            if (!isMounted) return;
             const unlockedLessons = progressSnapshot.val() || [];
             if (!unlockedLessons.includes(lessonId)) {
                 setError("Access Denied. You have not unlocked this lesson yet.");
                 setLoading(false);
                 return;
             }
+
             const modulesRef = ref(database, 'courseContent/modules');
-            modulesListener = onValue(modulesRef, (snapshot) => {
-                const modules = snapshot.val();
+            modulesListener = onValue(modulesRef, (modulesSnapshot) => {
+                if (!isMounted) return;
+                const modules = modulesSnapshot.val();
                 let foundLesson = null;
                 if (modules) {
                     for (const moduleId in modules) {
@@ -63,14 +68,16 @@ export default function LessonPage() {
                 if (foundLesson) {
                     setLessonData(foundLesson);
                 } else {
-                    setError('Lesson data could not be found in the curriculum.');
+                    setError('Lesson data could not be found.');
                 }
                 setLoading(false);
             });
-        }, { onlyOnce: true });
+        }, {
+            onlyOnce: true
+        });
 
         return () => {
-            progressListener();
+            isMounted = false;
             if (modulesListener) {
                 modulesListener();
             }
@@ -110,7 +117,8 @@ export default function LessonPage() {
          await push(messageRef, { sender: 'user', text: newMessage, timestamp: serverTimestamp() });
          setNewMessage('');
     };
-
+    
+    // --- THIS IS THE FINAL, UPGRADED, ADAPTIVE WINDOW LAUNCHER ---
     const handleStartRecitation = () => {
         if (!lessonData?.chatbotId) {
             alert("Chatbot is not configured for this lesson.");
@@ -129,7 +137,30 @@ export default function LessonPage() {
             </html>
         `;
 
-        const windowFeatures = 'width=800,height=700,menubar=no,toolbar=no,location=no,resizable=yes,scrollbars=yes';
+        // Step 1: Detect the screen size.
+        const isMobile = window.innerWidth < 768;
+
+        // Step 2: Define the optimal window size for each device.
+        let width, height;
+
+        if (isMobile) {
+            // For mobile, we want it to be almost full screen.
+            width = window.innerWidth * 0.95;
+            height = window.innerHeight * 0.85;
+        } else {
+            // For desktop, we use our preferred, larger size.
+            width = 500; // A sleeker, more modern width
+            height = 700;
+        }
+
+        // Step 3: Calculate the centered position for the window.
+        const left = (window.screen.width / 2) - (width / 2);
+        const top = (window.screen.height / 2) - (height / 2);
+
+        // Step 4: Construct the final, dynamic features string.
+        const windowFeatures = `width=${width},height=${height},left=${left},top=${top},menubar=no,toolbar=no,location=no,resizable=yes,scrollbars=yes`;
+        
+        // Step 5: Launch the perfectly sized and centered window.
         const newWindow = window.open('', 'VipHubChatbot', windowFeatures);
 
         if (newWindow) {
@@ -174,7 +205,6 @@ export default function LessonPage() {
                         <h3>Unlock the Next Lesson</h3>
                         <p>Once your AI Mentor gives you the secret code, enter it here to proceed.</p>
                         <form onSubmit={handleUnlockSubmit}>
-                            {/* --- THE DEFINITIVE SYNTAX FIX IS HERE --- */}
                             <input type="text" value={unlockCode} onChange={(e) => setUnlockCode(e.target.value)} placeholder="Enter unlock code" />
                             <button type="submit" disabled={isSubmittingCode}>{isSubmittingCode ? 'Verifying...' : 'Unlock'}</button>
                         </form>
