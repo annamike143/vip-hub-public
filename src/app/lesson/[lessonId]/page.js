@@ -125,47 +125,23 @@ export default function LessonPage() {
             return;
         }
 
-        const chatbotHtml = `
-            <!DOCTYPE html>
-            <html lang="en" style="height: 100%;">
-            <head><title>AI Mentor</title><style>body,html{margin:0;padding:0;height:100%;overflow:hidden;}</style></head>
-            <body>
-                <div id="chat_form" style="height: 100%;">
-                    <script src="https://app.simplebotinstall.com/js/chat_form_plugin.js" data-bot-id="${lessonData.chatbotId}"><\/script>
-                </div>
-            </body>
-            </html>
-        `;
-
-        // Step 1: Detect the screen size.
+        const url = `/chatbot.html?botId=${lessonData.chatbotId}`;
+        
+        // Step 1: Detect if the user is on a mobile device.
         const isMobile = window.innerWidth < 768;
 
-        // Step 2: Define the optimal window size for each device.
-        let width, height;
-
         if (isMobile) {
-            // For mobile, we want it to be almost full screen.
-            width = window.innerWidth * 0.95;
-            height = window.innerHeight * 0.85;
+            // --- On Mobile: Open in a full, new browser tab. ---
+            // This is the most robust and user-friendly experience on a small screen.
+            window.open(url, '_blank');
         } else {
-            // For desktop, we use our preferred, larger size.
-            width = 500; // A sleeker, more modern width
-            height = 700;
-        }
-
-        // Step 3: Calculate the centered position for the window.
-        const left = (window.screen.width / 2) - (width / 2);
-        const top = (window.screen.height / 2) - (height / 2);
-
-        // Step 4: Construct the final, dynamic features string.
-        const windowFeatures = `width=${width},height=${height},left=${left},top=${top},menubar=no,toolbar=no,location=no,resizable=yes,scrollbars=yes`;
-        
-        // Step 5: Launch the perfectly sized and centered window.
-        const newWindow = window.open('', 'VipHubChatbot', windowFeatures);
-
-        if (newWindow) {
-            newWindow.document.write(chatbotHtml);
-            newWindow.document.close();
+            // --- On Desktop: Open in our perfectly sized and centered pop-up window. ---
+            const width = 500;
+            const height = 700;
+            const left = (window.screen.width / 2) - (width / 2);
+            const top = (window.screen.height / 2) - (height / 2);
+            const windowFeatures = `width=${width},height=${height},left=${left},top=${top},menubar=no,toolbar=no,location=no,resizable=yes,scrollbars=yes`;
+            window.open(url, 'VipHubChatbot', windowFeatures);
         }
     };
 
